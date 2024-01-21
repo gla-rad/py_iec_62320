@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-IEC 62320-1 Sentences Module.
+IEC 62320-1 Sentence Module.
 
-This module implements classes for representing IEC 61162-1:2015 compliant
-sentences.
+This module implements classes for representing, generating [and parsing]
+IEC 61162-1:2015 compliant sentences.
 
 Created on Thu Jan 11 16:17:08 2018
 
@@ -13,14 +13,20 @@ Created on Thu Jan 11 16:17:08 2018
 # =============================================================================
 # %% Import Statements
 # =============================================================================
+# Built-in Modules ------------------------------------------------------------
+
+# Third-party Modules ---------------------------------------------------------
+
+# Local Modules ---------------------------------------------------------------
 from iec_61162.part_1.sentences import iec_checksum
+from iec_61162.part_1.sentences import ais_msg_bs_to_vdm_sentences
 
 # =============================================================================
-# %% Function Definitions
+# %% Helper Functions
 # =============================================================================
 
 # =============================================================================
-# %% Class Definitions
+# %% Sentence Definitions
 # =============================================================================
 class TSASentence:
     """
@@ -91,11 +97,113 @@ class TSASentence:
 
         return s
 
+
+# =============================================================================
+# %% Sentence Generation
+# =============================================================================
+class SentenceGenerator:
+    """
+    IEC 62320-1 Sentence Generator.
+
+    For multi-sentence messages, the generator automatically assigns
+    an appropriate Sequential ID.
+
+    Parameters
+    ----------
+    talker_id : str, optional
+        Talker ID. The default is "AI".
+
+    """
+    def __init__(self, talker_id="AI"):
+        self.talker_id = talker_id
+
+        self.vdm_sequential_id = 0
+
+    def generate_tsa_vdm(
+            self,
+            msg_bs,
+            channel,
+            unique_id="",
+            utc_hhmm="",
+            start_slot="",
+            priority=2):
+        """
+        Generate a TSA-VDM sentence sequence encapsulating an AIS message.
+
+        Parameters
+        ----------
+        msg_bs : bitstring.BitStream
+            AIS message bitstream, formatted as per Rec. ITU-R M.1371.
+        channel : str
+            Channel selection:
+
+            - 'A': AIS 1
+            - 'B': AIS 2.
+        unique_id : str, optional
+            Base station's unique ID. Maximum of 15 characters.
+            The default is "".
+        utc_hhmm : str, optional
+            UTC frame hour and minute of the requested transmission.
+            The default is "".
+        start_slot : str, optional
+            Start slot number of the requested transmission. The default is "".
+        priority : int, optional
+            Transmission priority (0-2). Lower number corresponds to higher
+            priority. The default is 2.
+
+        Returns
+        -------
+        list of lists of TSASentence and VDMSentence objects
+            Contiguous sentences of the same type are grouped in separate lists.
+
+            For example:
+
+            [[TSA Sentence], [VDM Sentence 1 of 2, VDM Sentence 2 of 2]].
+
+            The nested list structure is used by the IEC 61162-450 layer to
+            set the grouping control parameter code 'g' in IEC messages.
+
+        """
+        # Generate the TSA Sentence
+        tsa_sentence = TSASentence(
+            vdm_link=self.vdm_sequential_id,
+            channel=channel,
+            talker_id=self.talker_id)
+
+        # Generate the VDM Sentence(s)
+        vdm_sentences = ais_msg_bs_to_vdm_sentences(
+            msg_bs=msg_bs,
+            sequential_id=self.vdm_sequential_id,
+            channel=channel,
+            talker_id=self.talker_id)
+
+        # If this is a multi-sentence message, increase the sequential ID
+        if len(vdm_sentences) > 1:
+            self.vdm_sequential_id = (self.vdm_sequential_id + 1) % 10
+
+        return [[tsa_sentence]] + [vdm_sentences]
+
+
+# =============================================================================
+# %% Sentence Parsing
+# =============================================================================
+
+
 # =============================================================================
 # %% Quick & Dirty Testing
 # =============================================================================
 if __name__=='__main__':
+    from bitstring import BitStream
 
-    tsa_sentence = TSASentence(vdm_link=0, channel="A")
+    # Sample data
+    ais_msg_bs = BitStream("0x123456789ABCDEF"*15)
 
-    print(tsa_sentence.string)
+    # Initialise a Sentence Generator
+    sg = SentenceGenerator()
+
+    # Generate some sentences
+    sentence_groups = sg.generate_tsa_vdm(ais_msg_bs, channel="A")
+
+    for group in sentence_groups:
+        for sentence in group:
+            print(sentence.string)

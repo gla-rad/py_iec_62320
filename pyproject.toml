@@ -5,7 +5,9 @@ description = "A Python package that implements parts of the IEC 62320 series of
 authors = [
     {name = "Jan Safar", email = "jan.safar@gla-rad.org"},
 ]
-dependencies = []
+dependencies = [
+    "bitstring>=4.1.4",
+]
 requires-python = ">=3.11"
 readme = "README.md"
 license = {text = "Apache-2.0"}
