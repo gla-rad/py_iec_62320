@@ -5,7 +5,7 @@
 groups = ["default", "spyder", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:08e260a37737d173d25679817c4c73c80d32cc75482c76683a3978a46a6209ad"
+content_hash = "sha256:523306e4e81f92f400508465475e0836d67a6e25d7e91ce264cd8caa95e98dc7"
 
 [[package]]
 name = "appnope"
@@ -36,7 +36,7 @@ files = [
 name = "bitarray"
 version = "2.9.2"
 summary = "efficient arrays of booleans -- C extension"
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "bitarray-2.9.2-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:fe71fd4b76380c2772f96f1e53a524da7063645d647a4fcd3b651bdd80ca0f2e"},
     {file = "bitarray-2.9.2-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:d527172919cdea1e13994a66d9708a80c3d33dedcf2f0548e4925e600fef3a3a"},
@@ -96,7 +96,7 @@ name = "bitstring"
 version = "4.1.4"
 requires_python = ">=3.7"
 summary = "Simple construction, analysis and modification of binary data."
-groups = ["default", "dev"]
+groups = ["default"]
 dependencies = [
     "bitarray<3.0.0,>=2.8.0",
 ]
@@ -222,10 +222,11 @@ files = [
 name = "iec-61162"
 version = "0.1.0"
 requires_python = ">=3.11"
-editable = true
-path = "../py_iec_61162"
+git = "https://github.com/jan-safar/py_iec_61162.git"
+ref = "v0.1.0"
+revision = "e615086de006ec315beb6176d84064b4f1042ea0"
 summary = "A python package implementing parts of the IEC 61162 series of standards: 'Maritime Navigation and Radiocommunication Equipment and Systems - Digital Interfaces'."
-groups = ["dev"]
+groups = ["default"]
 dependencies = [
     "bitstring>=4.1.4",
 ]

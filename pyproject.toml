@@ -7,6 +7,7 @@ authors = [
 ]
 dependencies = [
     "bitstring>=4.1.4",
+    "iec-61162 @ git+https://github.com/jan-safar/py_iec_61162.git@v0.1.0",
 ]
 requires-python = ">=3.11"
 readme = "README.md"
@@ -25,5 +26,4 @@ spyder = [
     "spyder-kernels==2.5.*",
 ]
 dev = [
-    "-e file:///${PROJECT_ROOT}/../py_iec_61162#egg=iec-61162",
 ]
