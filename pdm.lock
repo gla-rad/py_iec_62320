@@ -2,10 +2,10 @@
 # It is not intended for manual editing.
 
 [metadata]
-groups = ["default", "spyder", "dev", "testing"]
+groups = ["default", "dev", "spyder", "testing"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:96086a08d2622d525708c8aea0cbb56ded225d722fc7e0845dae5c26c924712e"
+content_hash = "sha256:5b43ae01d03c0691e4b471deb2befbeea9ae6cad57f652284908a23614c464a2"
 
 [[package]]
 name = "appnope"
@@ -220,12 +220,12 @@ files = [
 
 [[package]]
 name = "iec-61162"
-version = "0.1.0"
+version = "0.2.0"
 requires_python = ">=3.11"
-git = "https://github.com/jan-safar/py_iec_61162.git"
-ref = "v0.1.0"
-revision = "e615086de006ec315beb6176d84064b4f1042ea0"
-summary = "A python package implementing parts of the IEC 61162 series of standards: 'Maritime Navigation and Radiocommunication Equipment and Systems - Digital Interfaces'."
+git = "https://github.com/gla-rad/py_iec_61162.git"
+ref = "v0.2.0"
+revision = "9a0edd2364086d1aa3618ca06652c1c6171bccd8"
+summary = "A python package that implements parts of the IEC 61162 series of standards, 'Maritime Navigation and Radiocommunication Equipment and Systems - Digital Interfaces'."
 groups = ["default"]
 dependencies = [
     "bitstring>=4.1.4",
@@ -360,14 +360,14 @@ files = [
 
 [[package]]
 name = "nest-asyncio"
-version = "1.5.9"
+version = "1.6.0"
 requires_python = ">=3.5"
 summary = "Patch asyncio to allow nested event loops"
 groups = ["spyder"]
 marker = "python_version >= \"3.8\""
 files = [
-    {file = "nest_asyncio-1.5.9-py3-none-any.whl", hash = "sha256:61ec07ef052e72e3de22045b81b2cc7d71fceb04c568ba0b2e4b2f9f5231bec2"},
-    {file = "nest_asyncio-1.5.9.tar.gz", hash = "sha256:d1e1144e9c6e3e6392e0fcf5211cb1c8374b5648a98f1ebe48e5336006b41907"},
+    {file = "nest_asyncio-1.6.0-py3-none-any.whl", hash = "sha256:87af6efd6b5e897c81050477ef65c62e2b2f35d51703cae01aff2905b1852e1c"},
+    {file = "nest_asyncio-1.6.0.tar.gz", hash = "sha256:6f172d5449aca15afd6c646851f4e31e02c598d553a667e38cafa997cfec55fe"},
 ]
 
 [[package]]
