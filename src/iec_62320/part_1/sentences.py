@@ -109,6 +109,76 @@ class TSASentence:
 
         return s
 
+class BCGSentence:
+    """
+    AIS BCG Sentence: Base Station configuration, general command.
+
+    """
+    formatter_code = "BCG"
+
+    def __init__(
+            self,
+            unique_id,
+            tx_power_a=None,
+            tx_power_b=None,
+            vdl_retries=None,
+            vdl_repeat=None,
+            ratdma_control=None,
+            utc_source=None,
+            ads_interval=None,
+            talker_id="AB",
+            rx_channel_a=2087,
+            rx_channel_b=2088,
+            tx_channel_a=2087,
+            tx_channel_b=2088,
+            sentence_status="C"):
+        # TODO: Implement input parameter value checking
+        self.unique_id = unique_id
+        self.rx_channel_a = rx_channel_a
+        self.rx_channel_b = rx_channel_b
+        self.tx_channel_a = tx_channel_a
+        self.tx_channel_b = tx_channel_b
+        self.tx_power_a = tx_power_a
+        self.tx_power_b = tx_power_b
+        self.vdl_retries = vdl_retries
+        self.vdl_repeat = vdl_repeat
+        self.ratdma_control = ratdma_control
+        self.utc_source = utc_source
+        self.ads_interval = ads_interval
+        self.talker_id = talker_id
+        self.sentence_status = sentence_status
+
+    @property
+    def string(self):
+        """
+        Returns
+        -------
+        s : str
+            Sentence string, formatted as per IEC 62320-1.
+
+        """
+        s = "${:s}{:s},{:s},{:s},{:s},{:s},{:s},{:s},{:s},{:s},{:s},{:s},{:s},{:s},{:s},{:s}".format(
+            self.talker_id,
+            self.formatter_code,
+            self.unique_id or "",
+            "" if self.rx_channel_a is None else str(self.rx_channel_a),
+            "" if self.rx_channel_b is None else str(self.rx_channel_b),
+            "" if self.tx_channel_a is None else str(self.tx_channel_a),
+            "" if self.tx_channel_b is None else str(self.tx_channel_b),
+            "" if self.tx_power_a is None else str(self.tx_power_a),
+            "" if self.tx_power_b is None else str(self.tx_power_b),
+            "" if self.vdl_retries is None else str(self.vdl_retries),
+            "" if self.vdl_repeat is None else str(self.vdl_repeat),
+            "" if self.ratdma_control is None else str(self.ratdma_control),
+            self.utc_source or "",
+            "" if self.ads_interval is None else "{:.1f}".format(self.ads_interval),
+            self.talker_id,
+            self.sentence_status)
+
+        checksum = iec_checksum(s)
+        s += "*" + "{:>02X}".format(checksum) + "\r\n"
+
+        return s
 
 # =============================================================================
 # %% Sentence Generation
@@ -206,6 +276,20 @@ class SentenceGenerator:
 # =============================================================================
 if __name__=='__main__':
     from bitstring import BitStream
+
+
+    # Sample BCG Sentence
+    bcg_sentence = BCGSentence(
+        unique_id="BASE1",
+        tx_power_a=0,
+        tx_power_b=1,
+        vdl_retries=2,
+        vdl_repeat=0,
+        ratdma_control=1,
+        utc_source="I",
+        ads_interval=60)
+
+    print(bcg_sentence.string)
 
     # Sample data
     ais_msg_bs = BitStream("0x123456789ABCDEF"*15)
