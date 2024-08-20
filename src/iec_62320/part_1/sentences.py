@@ -265,6 +265,49 @@ class SentenceGenerator:
 
         return [[tsa_sentence]] + [vdm_sentences]
 
+    def generate_vdm(
+            self,
+            msg_bs,
+            channel):
+        """
+        Generate a VDM sentence sequence encapsulating an AIS message.
+
+        Parameters
+        ----------
+        msg_bs : bitstring.BitStream
+            AIS message bitstream, formatted as per Rec. ITU-R M.1371.
+        channel : str
+            Channel selection:
+
+            - 'A': AIS 1
+            - 'B': AIS 2.
+
+        Returns
+        -------
+        list of lists of TSASentence and VDMSentence objects
+            Contiguous sentences of the same type are grouped in separate lists.
+
+            For example:
+
+            [[TSA Sentence], [VDM Sentence 1 of 2, VDM Sentence 2 of 2]].
+
+            The nested list structure is used by the IEC 61162-450 layer to
+            set the grouping control parameter code 'g' in IEC messages.
+
+        """
+        # Generate the VDM Sentence(s)
+        vdm_sentences = ais_msg_bs_to_vdm_sentences(
+            msg_bs=msg_bs,
+            sequential_id=self.vdm_sequential_id,
+            channel=channel,
+            talker_id=self.talker_id)
+
+        # If this is a multi-sentence message, increase the sequential ID
+        if len(vdm_sentences) > 1:
+            self.vdm_sequential_id = (self.vdm_sequential_id + 1) % 10
+
+        return [vdm_sentences]
+
 
 # =============================================================================
 # %% Sentence Parsing
@@ -276,7 +319,6 @@ class SentenceGenerator:
 # =============================================================================
 if __name__=='__main__':
     from bitstring import BitStream
-
 
     # Sample BCG Sentence
     bcg_sentence = BCGSentence(
@@ -299,6 +341,13 @@ if __name__=='__main__':
 
     # Generate some sentences
     sentence_groups = sg.generate_tsa_vdm(ais_msg_bs, channel="A")
+
+    for group in sentence_groups:
+        for sentence in group:
+            print(sentence.string)
+
+    # Generate some more
+    sentence_groups = sg.generate_vdm(ais_msg_bs, channel="A")
 
     for group in sentence_groups:
         for sentence in group:
