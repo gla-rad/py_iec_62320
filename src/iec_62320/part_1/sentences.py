@@ -242,8 +242,8 @@ class SentenceGenerator:
 
             [[TSA Sentence], [VDM Sentence 1 of 2, VDM Sentence 2 of 2]].
 
-            The nested list structure is used by the IEC 61162-450 layer to
-            set the grouping control parameter code 'g' in IEC messages.
+            Note: The nested list structure is used by the IEC 61162-450 layer
+            to set the grouping control parameter code 'g' in IEC messages.
 
         """
         # Generate the TSA Sentence
@@ -284,15 +284,14 @@ class SentenceGenerator:
 
         Returns
         -------
-        list of lists of TSASentence and VDMSentence objects
-            Contiguous sentences of the same type are grouped in separate lists.
+        list of lists of VDMSentence objects
 
             For example:
 
-            [[TSA Sentence], [VDM Sentence 1 of 2, VDM Sentence 2 of 2]].
+            [[VDM Sentence 1 of 2, VDM Sentence 2 of 2]].
 
-            The nested list structure is used by the IEC 61162-450 layer to
-            set the grouping control parameter code 'g' in IEC messages.
+            Note: The nested list structure is used by the IEC 61162-450 layer
+            to set the grouping control parameter code 'g' in IEC messages.
 
         """
         # Generate the VDM Sentence(s)
