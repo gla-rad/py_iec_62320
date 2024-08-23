@@ -259,9 +259,11 @@ class SentenceGenerator:
             channel=channel,
             talker_id=self.talker_id)
 
+        # Correction: It appears that the VDM sequential ID should be increased
+        # even for single-sentence messages
         # If this is a multi-sentence message, increase the sequential ID
-        if len(vdm_sentences) > 1:
-            self.vdm_sequential_id = (self.vdm_sequential_id + 1) % 10
+        # if len(vdm_sentences) > 1:
+        self.vdm_sequential_id = (self.vdm_sequential_id + 1) % 10
 
         return [[tsa_sentence]] + [vdm_sentences]
 
